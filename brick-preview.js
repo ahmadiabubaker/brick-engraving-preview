@@ -1,16 +1,27 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const updatePreview = () => {
-    document.getElementById('preview-line1').textContent = document.getElementById('input_18_28')?.value || '';
-    document.getElementById('preview-line2').textContent = document.getElementById('input_18_33')?.value || '';
-    document.getElementById('preview-line3').textContent = document.getElementById('input_18_34')?.value || '';
-  };
+document.addEventListener('gform_post_render', function() {
+    // Wait for Gravity Forms to fully load
+    const formId = 18; // Your form ID
+    const fieldIds = ['28', '33', '34']; // Your field IDs
+    
+    const updatePreview = () => {
+        const line1 = document.getElementById('input_' + formId + '_' + fieldIds[0])?.value || '';
+        const line2 = document.getElementById('input_' + formId + '_' + fieldIds[1])?.value || '';
+        const line3 = document.getElementById('input_' + formId + '_' + fieldIds[2])?.value || '';
+        
+        document.getElementById('preview-line1').textContent = line1;
+        document.getElementById('preview-line2').textContent = line2;
+        document.getElementById('preview-line3').textContent = line3;
+    };
 
-  // Add event listeners to all three input fields
-  ['input_18_28', 'input_18_33', 'input_18_34'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', updatePreview);
-  });
+    // Add event listeners
+    fieldIds.forEach(fieldId => {
+        const input = document.getElementById('input_' + formId + '_' + fieldId);
+        if (input) {
+            input.addEventListener('input', updatePreview);
+            input.addEventListener('change', updatePreview);
+        }
+    });
 
-  // Initialize the preview on page load
-  updatePreview();
+    // Initial update
+    updatePreview();
 });
